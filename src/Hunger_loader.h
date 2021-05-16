@@ -2,16 +2,16 @@
  * Copyright (C) 2016+ AzerothCore <www.azerothcore.org>, released under GNU AGPL v3 license: https://github.com/azerothcore/azerothcore-wotlk/blob/master/LICENSE-AGPL3
  */
 
-#ifndef _SKELETON_MODULE_LOADER_H_
-#define _SKELETON_MODULE_LOADER_H_
+#ifndef _Hunger_LOADER_H_
+#define _Hunger_LOADER_H_
 
 // From SC
-void AddMyPlayerScripts();
+void AddSC_Hunger();
 
 // Add all
-void AddMyModuleScripts()
+void AddHungerScripts()
 {
-    AddMyPlayerScripts();
+    AddSC_Hunger();
 }
 
-#endif // _SKELETON_MODULE_LOADER_H_
+#endif // _Hunger_LOADER_H_

@@ -1,0 +1,26 @@
+#
+# Copyright (C) 2016+ AzerothCore <www.azerothcore.org>, released under GNU AGPL v3 license: https://github.com/azerothcore/azerothcore-wotlk/blob/master/LICENSE-AGPL3
+#
+
+[worldserver]
+
+########################################
+# Hunger configuration
+########################################
+#
+#    Hunger.Enable
+#        Description: Enable Hunger and print "Hunger Loaded" message at server start
+#        Default:     0 - Disabled
+#                     1 - Enabled
+#
+#    Hunger.DrainTick
+#        Description: How often, in milliseconds, that health will be drained from the players.
+#        Default:     5000
+#
+#    Hunger.DrainAmount
+#        Description: How much health, in integers, will be drained from the players per tick.
+#        Default:     1
+#
+Hunger.Enable = 0
+Hunger.DrainTick = 5000
+Hunger.DrainAmount = 1
