@@ -5,27 +5,24 @@
 #include "ScriptMgr.h"
 #include "Config.h"
 
-private:
-    uint32 drainTick; // for example purposes, see OnWorldUpdate()
-    uint32 drainAmount;
-};
-
-// Add player scripts
 class Hunger_World : public WorldScript
 {
+private:
+    uint32 drainTick;
+    uint32 drainAmount;
+
 public:
     Hunger_World() : WorldScript("Hunger_World") {}
 
-    void OnAfterConfigLoad(bool reload) {
+    void OnAfterConfigLoad(bool /*reload*/) {
         drainTick = sConfigMgr->GetOption<int32>("DrainTick", 5000);
         drainAmount = sConfigMgr->GetOption<int32>("DrainAmount", 1);
     }
 
-    void OnWorldUpdate(uint32 diff)
-    {
+    void OnWorldUpdate(uint32 diff) {
         if (diff > drainTick)
         {
-            sWorld->SendWorldText("Players hunger!");
+            sWorld->SendGlobalText("Players hunger");
             drainTick = sConfigMgr->GetOption<int32>("DrainTick", 5000);;
         }
         else
