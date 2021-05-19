@@ -4,31 +4,60 @@
 
 #include "ScriptMgr.h"
 #include "Config.h"
+#include "IWorld.h"
+#include "Player.h"
 
 class Hunger_World : public WorldScript
 {
 private:
-    uint32 drainTick;
-    uint32 drainAmount;
+    int drainTick;
+    int curDrainTick;
+    int drainAmount;
+    int playerHealthRegen;
+    bool enabled;
 
 public:
     Hunger_World() : WorldScript("Hunger_World") {}
 
     void OnAfterConfigLoad(bool /*reload*/) {
-        drainTick = sConfigMgr->GetOption<int32>("DrainTick", 5000);
-        drainAmount = sConfigMgr->GetOption<int32>("DrainAmount", 1);
+        drainTick = sConfigMgr->GetOption<int>("Hunger.DrainTick", 5000);
+        curDrainTick = drainTick;
+        drainAmount = sConfigMgr->GetOption<int>("Hunger.DrainAmount", 1);
+        playerHealthRegen = sConfigMgr->GetOption<int>("Hunger.PlayerHealthRegen", 0);
+        enabled = sConfigMgr->GetOption<bool>("Hunger.Enable", false);
+
+        sWorld->setRate(RATE_HEALTH, (float)playerHealthRegen);
+
+        LOG_INFO("server", "Hunger.Enable: %u, Hunger.DrainTick: %u, Hunger.DrainAmount: %u, Hunger.PlayerHealthRegen: %u", enabled, drainTick, drainAmount, playerHealthRegen);
     }
 
-    void OnWorldUpdate(uint32 diff) {
-        if (diff > drainTick)
-        {
-            sWorld->SendGlobalText("Players hunger");
-            drainTick = sConfigMgr->GetOption<int32>("DrainTick", 5000);;
+    void OnUpdate(uint32 diff) {
+        if (enabled){
+            if (diff > curDrainTick) {
+                curDrainTick = drainTick;
+                ReduceAllPlayersHealth();
+            } else {
+                curDrainTick -= diff;
+            }
         }
-        else
+    }
+
+    void ReduceAllPlayersHealth(){
+        const SessionMap& s = sWorld->GetAllSessions();
+        SessionMap::const_iterator itr;
+        for (itr = s.begin(); itr != s.end(); ++itr)
         {
-            drainTick -= diff;
+            if (!itr->second)
+                continue;
+
+            Player* player = itr->second->GetPlayer();
+            if (!player)
+                continue;
+
+            if (player->IsInWorld())
+                player->ModifyHealth(- (int32)drainAmount);
         }
+        return;
     }
 };
 
