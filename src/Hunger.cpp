@@ -33,7 +33,7 @@ public:
 
     void OnUpdate(uint32 diff) {
         if (enabled){
-            if (diff > curDrainTick) {
+            if ((int)diff > curDrainTick) {
                 curDrainTick = drainTick;
                 ReduceAllPlayersHealth();
             } else {
@@ -54,7 +54,7 @@ public:
             if (!player)
                 continue;
 
-            if (player->IsInWorld())
+            if (player->IsInWorld() && player->IsAlive())
                 player->ModifyHealth(- (int32)drainAmount);
         }
         return;
